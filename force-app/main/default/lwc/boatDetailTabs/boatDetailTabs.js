@@ -27,7 +27,7 @@ import { NavigationMixin } from 'lightning/navigation';
 const BOAT_FIELDS = [BOAT_ID_FIELD, BOAT_NAME_FIELD];
 export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
     boatId;
-    @wire(getRecord, { recordId: $boatId, fields: BOAT_FIELDS })
+    @wire(getRecord, { recordId: '$boatId', fields: BOAT_FIELDS })
     wiredRecord;
     label = {
         labelDetails,
@@ -55,18 +55,16 @@ export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
     // Subscribe to the message channel
     subscribeMC() {
         // local boatId must receive the recordId from the message
-        if (this.subscription || this.recordId) {
-            return;
+        if (!this.subscription) {
+            this.subscription = subscribe(
+                this.messageContext,
+                BOATMC,
+                (message) => {
+                    this.boatId = message.recordId;
+                },
+                { scope: APPLICATION_SCOPE }
+            );
         }
-        // Subscribe to the message channel to retrieve the recordId and explicitly assign it to boatId.
-        this.subscription = subscribe(
-            this.messageContext,
-            BOATMC,
-            (recordId) => {
-                this.boatId = recordId;
-            },
-            { scope: APPLICATION_SCOPE }
-        )
     }
 
     // Calls subscribeMC()
@@ -77,16 +75,17 @@ export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
     // Navigates to record page
     navigateToRecordViewPage() {
         this[NavigationMixin.Navigate]({
-            type: 'standard__objectPage',
+            type: 'standard__recordPage',
             attributes: {
                 recordId: this.boatId,
                 actionName: 'view'
             }
-        })
+        });
     }
 
     // Navigates back to the review list, and refreshes reviews component
     handleReviewCreated() {
         this.template.querySelector('lightning-tabset').activeTabValue = 'reviews';
+        this.template.querySelector('c-boat-reviews').refresh();
     }
 }

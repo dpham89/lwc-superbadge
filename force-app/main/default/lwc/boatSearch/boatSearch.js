@@ -26,6 +26,6 @@ export default class BoatSearch extends NavigationMixin(LightningElement) {
                 objectApiName: 'Boat__c',
                 actionName: 'new'
             }
-        })
+        });
     }
 }

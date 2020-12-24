@@ -8,13 +8,12 @@
     <template if:true={wiredRecord.data}>
         <!-- lightning card for the content when wiredRecord has data goes here  -->
         <lightning-card>
-            <lightning-tabset>
+            <lightning-tabset variant="scoped">
                 <lightning-tab label={label.labelDetails}>
                     <lightning-card title={boatName} icon-name={detailsTabIconName}>
-                        <slot name="actions">
-                            <lightning-button label={label.labelFullDetails} onclick={navigateToRecordViewPage}>
-                            </lightning-button>
-                        </slot>
+                        <lightning-button slot="actions" label={label.labelFullDetails}
+                            onclick={navigateToRecordViewPage}>
+                        </lightning-button>
                         <lightning-record-view-form record-id={boatId} object-api-name="Boat__c" density="compact">
                             <lightning-output-field field-name="Type__c">
                             </lightning-output-field>
@@ -28,7 +27,7 @@
                     </lightning-card>
                 </lightning-tab>
                 <lightning-tab label={label.labelReviews}>
-                    <c-boat-reviews boat-id={boatId} value="reviews"></c-boat-reviews>
+                    <c-boat-reviews record-id={boatId} value="reviews"></c-boat-reviews>
                 </lightning-tab>
                 <lightning-tab label={label.labelAddReview}>
                     <c-boat-add-review-form record-id={boatId} oncreatereview={handleReviewCreated}>

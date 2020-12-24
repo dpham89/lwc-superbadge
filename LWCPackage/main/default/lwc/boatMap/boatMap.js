@@ -63,7 +63,7 @@ export default class BoatMap extends LightningElement {
         this.boatId = recordId;
       },
       { scope: APPLICATION_SCOPE }
-    )
+    );
   }
 
   // Calls subscribeMC()
